@@ -64,7 +64,10 @@ SUBSYSTEM=="tty", ATTRS{idVendor}=="YOURidVendor", ATTRS{idProduct}=="YOURidProd
 
 sudo udevadm control --reload-rules && sudo udevadm trigger
 
-git clone https://github.com/PhirePhly/aprx.git
+cd /opt
+sudo git clone https://github.com/EA7JRS/aprx.git #(New)
+#(orig)git clone https://github.com/PhirePhly/aprx.git
+
 cd aprx
 mkdir build && cd build
 cmake ..
