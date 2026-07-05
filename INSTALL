@@ -55,3 +55,14 @@ precompiled binaries:
 	$ make make-deb
 	# dpkg -i ../aprx_....deb
 
+For Debian 13.x users wanting to compile themselves instead of using
+precompiled binaries:
+
+git clone https://github.com/PhirePhly/aprx.git
+cd aprx
+mkdir build && cd build
+cmake ..
+make
+sudo make install
+
+
