@@ -2,7 +2,7 @@ Source: aprx
 Section: hamradio
 Priority: extra
 Maintainer: Kenneth Finnegan <kennethfinnegan2007@gmail.com>
-Build-Depends: debhelper (>= 4), libssl-dev
+Build-Depends: debhelper (>= 13)
 Standards-Version: 3.7.2
 
 Package: aprx

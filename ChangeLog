@@ -1,3 +1,33 @@
+2026-11-15 Manuel - EA7JRS
+
+	* aprx.h, netresolver.c, aprx-stat.c:
+	    Fix linking with GCC 10 and later (-fno-common by default):
+	    aprsis_thread and pthr_attrs are declared extern in aprx.h and
+	    defined only in aprsis.c; netresolver.c uses its own thread
+	    attributes; aprx-stat.c uses the 'now' defined in timercmp.c.
+
+	* ttyreader.c:
+	    aprx_cfmakeraw() with an ISO C prototype: the old K&R definition
+	    left 'f' as an implicit int, a hard error in GCC 14.
+
+	* kiss.c:
+	    Back to the upstream version.  The LoRa "sanitizer" removed
+	    every non-printable byte, which destroys binary AX.25 frames,
+	    and the rewritten file lacked kiss_pullkiss(), kiss_poll() and
+	    kiss_kisswrite(), so aprx did not link.
+
+	* CMakeLists.txt:
+	    Removed; it built aprx-stat and ssl.c into aprx.  The upstream
+	    ./configure && make works again.
+
+	* debian/compat, debian/control, debian/rules:
+	    debhelper compat 13 (compat 5 is refused by current debhelper),
+	    dh_prep instead of dh_clean -k, build-arch/build-indep targets.
+	    No libssl-dev build dependency: SSL support is not compiled.
+
+	* VERSION:
+	    2.9.1+ea7jrs1
+
 2014-08-29 Matti Aarnio - OH2MQK - KP20NG  <oh2mqk@sral.fi>
 
 	* beacon.c:
