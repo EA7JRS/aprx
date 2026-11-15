@@ -54,29 +54,52 @@ precompiled binaries:
 	# dpkg -i ../aprx_....deb
 
 
-##NEW For Debian 13.x users wanting to compile themselves instead of using
-precompiled binaries:
+Debian 13 (trixie) and APRS LoRa KISS devices  -- EA7JRS fork
+---------------------------------------------------------------
 
-lsusb
+This fork only fixes the build on current compilers and packaging
+tools; the KISS code and everything else is upstream aprx (2.9.1 plus
+the later upstream commits).
 
-sudo nano /etc/udev/rules.d/99-lora-aprs.rules
-SUBSYSTEM=="tty", ATTRS{idVendor}=="YOURidVendor", ATTRS{idProduct}=="YOURidProduct", SYMLINK+="ttyLoraAPRS", MODE="0660", GROUP="dialout"
+  - GCC 10 and later (Debian 13 ships GCC 14) failed to link with
+    "multiple definition of aprsis_thread / pthr_attrs / now".
+  - GCC 14 refused the old K&R definition of aprx_cfmakeraw().
+  - The Debian packaging used debhelper compat 5, which current
+    debhelper refuses; it now uses compat 13.
 
-sudo udevadm control --reload-rules && sudo udevadm trigger
+1. Give the LoRa device a stable name (optional but recommended).
+   Find its USB ids with:
 
-cd /opt
-sudo git clone https://github.com/EA7JRS/aprx.git #(New)
-#(orig)git clone https://github.com/PhirePhly/aprx.git
+	$ lsusb
 
-cd aprx
-mkdir build
-./configure
-cd build
-cmake ..
-make
-sudo make install
+   and create /etc/udev/rules.d/99-lora-aprs.rules with:
 
+	SUBSYSTEM=="tty", ATTRS{idVendor}=="YOURidVendor", ATTRS{idProduct}=="YOURidProduct", SYMLINK+="ttyLoraAPRS", MODE="0660", GROUP="dialout"
 
-sudo nano /etc/aprx.conf
-edit your new APRS-LoRa desvice 
-serial-device /dev/ttyLoraAPRS 115200 8N1 kiss
+	$ sudo udevadm control --reload-rules && sudo udevadm trigger
+
+2. Build and install as a Debian package (recommended: it brings the
+   init script, logrotate and apparmor files, and apt knows about it):
+
+	$ sudo apt install build-essential debhelper fakeroot git
+	$ git clone https://github.com/EA7JRS/aprx.git
+	$ cd aprx
+	$ ./configure
+	$ make make-deb
+	$ sudo dpkg -i ../aprx_2.9.1+ea7jrs1_*.deb
+
+   Or build and install directly, without a package:
+
+	$ ./configure
+	$ make
+	$ sudo make install
+
+3. Point aprx to the device in /etc/aprx.conf, inside an <interface>
+   block:
+
+	serial-device /dev/ttyLoraAPRS 115200 8n1 KISS
+
+   The device must speak standard KISS with binary AX.25 frames (as the
+   APRS LoRa+ tracker and the CA2RXU firmwares do in KISS mode), and
+   nothing else on that serial port: debug or log output mixed into
+   the same port corrupts the KISS stream. Disable it in the firmware.

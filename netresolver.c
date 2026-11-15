@@ -13,7 +13,7 @@
 #include <signal.h>
 #include <pthread.h>
 pthread_t      netresolv_thread;
-pthread_attr_t pthr_attrs;
+static pthread_attr_t netresolv_attrs;  /* own attributes: pthr_attrs belongs to aprsis.c */
 #endif
 
 static int                 nrcount;
@@ -129,12 +129,12 @@ void netresolv_start(void) {
 	resolve_all();
 
 #if defined(HAVE_PTHREAD_CREATE) && defined(ENABLE_PTHREAD)
-	pthread_attr_init(&pthr_attrs);
+	pthread_attr_init(&netresolv_attrs);
 	/* 64 kB stack is enough for this thread (I hope!)
 	   default of 2 MB is way too much...*/
-	pthread_attr_setstacksize(&pthr_attrs, 64*1024);
+	pthread_attr_setstacksize(&netresolv_attrs, 64*1024);
 
-	pthread_create(&netresolv_thread, &pthr_attrs, (void*)netresolv_runthread, NULL);
+	pthread_create(&netresolv_thread, &netresolv_attrs, (void*)netresolv_runthread, NULL);
 
 #endif
 }
