@@ -1,8 +1,8 @@
 #! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          aprx
-# Required-Start:    $syslog $local_fs
-# Required-Stop:     $syslog $local_fs
+# Required-Start:    $syslog $local_fs $remote_fs
+# Required-Stop:     $syslog $local_fs $remote_fs
 # Should-Start:      ax25ifs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
@@ -17,7 +17,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="aprx igate"
 NAME=aprx
 DAEMON=/usr/sbin/$NAME
-DAEMON_ARGS=""
+DAEMON_OPTS=""
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
@@ -48,7 +48,7 @@ do_start()
 	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
 		|| return 1
 	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- \
-		$DAEMON_ARGS \
+		$DAEMON_OPTS \
 		|| return 2
 	# Add code here, if necessary, that waits for the process to be ready
 	# to handle requests from services started subsequently which depend

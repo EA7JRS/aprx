@@ -1,8 +1,8 @@
 #
-# STARTAPRX: start aprx on boot. Should be set to "yes" once you have
-#            configured aprx.
+# STARTAPRX: start aprx on boot ("yes"), as the Debian package does.
+#            Set it to "no" to keep aprx stopped.
 #
-STARTAPRX="no"
+STARTAPRX="yes"
 
 #
 # Additional options that are passed to the Daemon.
