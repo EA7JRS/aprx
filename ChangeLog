@@ -1,5 +1,17 @@
 2026-11-15 Manuel - EA7JRS
 
+	* debian/aprx.default, debian/aprx.init:
+	    aprx starts once installed, like the Debian package it replaces:
+	    STARTAPRX defaults to "yes" (with "no" aprx did not start after
+	    upgrading from Debian's aprx, whose default file has no STARTAPRX).
+	    The init script now reads DAEMON_OPTS, the variable the default
+	    file sets (it read DAEMON_ARGS, so the options were ignored), and
+	    waits for $remote_fs.
+
+	* VERSION: v2.9.1+ea7jrs2.
+
+2026-11-15 Manuel - EA7JRS
+
 	* aprx.h, netresolver.c, aprx-stat.c:
 	    Fix linking with GCC 10 and later (-fno-common by default):
 	    aprsis_thread and pthr_attrs are declared extern in aprx.h and
